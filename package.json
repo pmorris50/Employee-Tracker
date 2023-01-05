@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/pmorris50/Employee-Tracker#readme",
   "dependencies": {
-    "node": "^19.3.0"
+    "console.table": "^0.10.0",
+    "inquirer": "^9.1.4",
+    "mysql2": "^2.3.3",
+    "node": "^19.3.0",
+    "path": "^0.12.7"
   }
 }
