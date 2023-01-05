@@ -7,7 +7,7 @@ const cTable =require('console.table');
 const PORT = process.env.PORT || 3001
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true})); //express only needed if hosting (means there is a front end)
 
 
 const db = mysql.createConnection({
@@ -19,7 +19,7 @@ const db = mysql.createConnection({
 console.log('Connected to the company_db database')
 );
 
-
+//write all db.queries
 
 
 
