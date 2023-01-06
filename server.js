@@ -1,5 +1,5 @@
 //grabbing packages
-const  {startQuestion, updateEmployeeRoleQs } = require('./inquirer.js');
+const { startQuestion, updateEmployeeRoleQs, addDepartment } = require('./inquirer.js');
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
@@ -35,19 +35,61 @@ function init() {
     inquirer.prompt(startQuestion)
         .then(answer => {
             if (answer.init === 'View All Departments') {
-                const sql = 'SELECT DISTINCT name FROM department;';
-                db.query(sql, (err, results) => {
+                const sql1 = 'SELECT DISTINCT name FROM department;';
+                db.query(sql1, (err, results) => {
                     if (err) {
                         throw err;
                     } else {
                         console.table('Departments', results);
-                       
+
                     }
-                    //return init();
+
+                    init();
                 });
+            }
+            if (answer.init === 'View All Employees') {
+                const sql2 = 'SELECT DISTINCT first_name, last_name FROM employee;';
+                db.query(sql2, (err, results) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table('Employees', results)
+                    }
+                    return init();
+                })
+            }
+            if (answer.init == 'View All Roles') {
+                sql3 = 'SELECT DISTINCT title FROM role;';
+                db.query(sql3, (err, results) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table('Roles', results)
+                    }
+                    return init();
+                })
+            }
+            if (answer.init == 'Quit') {
+                return init();
+                //finish later. I want to exit inquirer
+            }
+
+            if(answer.init = 'Add Department'){
+                //const userInput = answer.init;
+                sql4 = `INSERT INTO (name) VALUES ('${userInput}');`
+                db.query(sql4, (err, results) =>{
+                    if(err){
+                        throw err;
+                    } else {
+                        console.table('Departments', results);
+                    }
+                })
             }
         });
 }
 init();
 
-
+function addDepartmentQs(){
+    inquirer.prompt(addDepartment)
+    .then(answer.add)
+}
