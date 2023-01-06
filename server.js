@@ -1,5 +1,5 @@
 //grabbing packages
-const {startQuestion, updateEmployeeRoleQs} = require('./inquirer.js');
+const  {startQuestion, updateEmployeeRoleQs } = require('./inquirer.js');
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
@@ -7,18 +7,19 @@ const path = require('path')
 const cTable = require('console.table');
 const PORT = process.env.PORT || 3001
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); //express only needed if hosting (means there is a front end)
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: true })); //express only needed if hosting (means there is a front end)
 
 
 const db = mysql.createConnection({
-    host: PORT,
+    host: 'localhost',
     user: 'root',
     password: 'rootroot',
     database: 'company_db'
 },
+
     console.log('Connected to the company_db database')
-    
+    //init();
 );
 // inquirer.prompt({
 //     type: 'list',
@@ -30,24 +31,23 @@ const db = mysql.createConnection({
 //   });
 //write all db.queries inside of .promptstatement
 
-function init(){
-inquirer.prompt(startQuestion)
-    .then(answer => {
-        if (answer.init === 'View All Departments') {
-            const sql = 'SELECT DISTINCT name FROM department';
-            db.query(sql, (err, results) => {
-                if (err) {
-                    throw err;
-                } else {
-                    console.table('Departments', results);
-                }
-            });
-        }
-    });
+function init() {
+    inquirer.prompt(startQuestion)
+        .then(answer => {
+            if (answer.init === 'View All Departments') {
+                const sql = 'SELECT DISTINCT name FROM department;';
+                db.query(sql, (err, results) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table('Departments', results);
+                       
+                    }
+                    //return init();
+                });
+            }
+        });
 }
-
 init();
 
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// });
+

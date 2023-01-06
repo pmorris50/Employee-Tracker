@@ -13,4 +13,4 @@ const updateEmployeeRoleQs = [{
 }
 ]
 
-module.exports = startQuestion, updateEmployeeRoleQs
+module.exports = {startQuestion: startQuestion,updateEmployeeRoleQs: updateEmployeeRoleQs}
