@@ -2,14 +2,16 @@ const startQuestion = [{
     type: 'list',
     name: 'init',
     message: 'What Would you like to do?',
-    choices: ['View All Employees', 'Update Employee Role', 'View All Roles', 'View All Departments', 'Add Department', 'Add New Employee', 'Quit']
+    choices: ['View All Employees', 'Update Employee Role', 'View All Roles', 'View All Departments', 'Add Department', 'Add New Employee', 'Add New Role', 'Quit']
 }];
 const addDepartment = [
     {
         type: 'input',
         name: 'add',
         message: 'What is the name of department you want to add?'
-    }
+    },
+ 
+
 
 
 ]
@@ -33,12 +35,19 @@ const addNewEmployeeQs = [
         name: 'lastName',
         message: "What is the employee's last name?"
     },
-//     {
-//         type: 'list',
-//         name: 'roleID',
-//         message: "What is the employee's role ID"
-//         choices: //variables for what role_id's are avaliable per etable
-//     }
+
+ ]
+ const addNewRole = [
+    {
+        type: 'input',
+        name: 'roleName',
+        message: 'What is the new role?'
+    }, 
+    {
+        type: 'input',
+        name: 'salary',
+        message: 'What is the Salary? Please enter a numerical value.' 
+    }
  ]
 
 module.exports = {

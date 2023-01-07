@@ -19,17 +19,9 @@ const db = mysql.createConnection({
 },
 
     console.log('Connected to the company_db database')
-    //init();
+
 );
-// inquirer.prompt({
-//     type: 'list',
-//     name: 'init',
-//     message: 'What Would you like to do?',
-//     choices: ['View All Employees', 'Update Employee Role', 'View All Roles', 'View All Departments', 'Add Department', 'Add New Employee','Quit' ]
-//   }).then(answer => {
-//     console.log(answer.name);
-//   });
-//write all db.queries inside of .promptstatement
+
 
 function init() {
     inquirer.prompt(startQuestion)
@@ -61,8 +53,8 @@ function init() {
                 })
             }
             if (answer.init == 'Quit') {
-                return init();
-                //finish later. I want to exit inquirer
+                process.exit();
+
             }
 
             if (answer.init === 'Add Department') {
@@ -169,6 +161,54 @@ function init() {
                 })
 
             }
+           if(answer.init ==  'Add New Role'){
+            const sql = 'SELECT department_id FROM role;';
+            let departmentIds = [];
+            db.query(sql, (err, roleObj) =>{
+                const addNewRole = [
+                    {
+                        type: 'input',
+                        name: 'title',
+                        message: 'What is the new role?'
+                    }, 
+                    {
+                        type: 'input',
+                        name: 'salary',
+                        message: 'What is the Salary? Please enter a numerical value.' 
+                    },
+                    {
+                        type: 'list',
+                        name: 'departmentId',
+                        message: "what is the new role's department ID?",
+                        choices: roleObj.map((obj)=>{
+                            return obj.department_id
+                        })
+                    }
+                 ]
+            
+                 inquirer.prompt(addNewRole)
+                 .then((answer)=>{
+                    const title = answer.title;
+                    const salary = answer.salary;
+                    const departmentId = answer.departmentId;
+                    const sql = `INSERT INTO role (title, salary, department_id) VALUES ('${title}', ${salary}, ${departmentId});`
+                    db.query(sql, (err, newRole) =>{
+                        if(err){
+                            throw err;
+                        } else{
+                            db.query('SELECT * FROM role', (err, newRoleTable) =>{
+                                if(err){
+                                    throw err;
+                                } else {
+                                    console.table('Role', newRoleTable);
+                                }
+                            })
+                        }
+                    })
+                 })
+            })
+           }
+
 
         })
 };
