@@ -5,6 +5,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const path = require('path')
 const cTable = require('console.table');
+const { listenerCount } = require('process');
 const PORT = process.env.PORT || 3001
 const app = express();
 //app.use(express.json());
@@ -161,53 +162,90 @@ function init() {
                 })
 
             }
-           if(answer.init ==  'Add New Role'){
-            const sql = 'SELECT department_id FROM role;';
-            let departmentIds = [];
-            db.query(sql, (err, roleObj) =>{
-                const addNewRole = [
-                    {
-                        type: 'input',
-                        name: 'title',
-                        message: 'What is the new role?'
-                    }, 
-                    {
-                        type: 'input',
-                        name: 'salary',
-                        message: 'What is the Salary? Please enter a numerical value.' 
-                    },
-                    {
-                        type: 'list',
-                        name: 'departmentId',
-                        message: "what is the new role's department ID?",
-                        choices: roleObj.map((obj)=>{
-                            return obj.department_id
-                        })
-                    }
-                 ]
-            
-                 inquirer.prompt(addNewRole)
-                 .then((answer)=>{
-                    const title = answer.title;
-                    const salary = answer.salary;
-                    const departmentId = answer.departmentId;
-                    const sql = `INSERT INTO role (title, salary, department_id) VALUES ('${title}', ${salary}, ${departmentId});`
-                    db.query(sql, (err, newRole) =>{
-                        if(err){
-                            throw err;
-                        } else{
-                            db.query('SELECT * FROM role', (err, newRoleTable) =>{
-                                if(err){
-                                    throw err;
-                                } else {
-                                    console.table('Role', newRoleTable);
-                                }
+            if (answer.init == 'Add New Role') {
+                const sql = 'SELECT department_id FROM role;';
+                let departmentIds = [];
+                db.query(sql, (err, roleObj) => {
+                    const addNewRole = [
+                        {
+                            type: 'input',
+                            name: 'title',
+                            message: 'What is the new role?'
+                        },
+                        {
+                            type: 'input',
+                            name: 'salary',
+                            message: 'What is the Salary? Please enter a numerical value.'
+                        },
+                        {
+                            type: 'list',
+                            name: 'departmentId',
+                            message: "what is the new role's department ID?",
+                            choices: roleObj.map((obj) => {
+                                return obj.department_id
                             })
                         }
-                    })
-                 })
-            })
-           }
+                    ]
+
+                    inquirer.prompt(addNewRole)
+                        .then((answer) => {
+                            const title = answer.title;
+                            const salary = answer.salary;
+                            const departmentId = answer.departmentId;
+                            const sql = `INSERT INTO role (title, salary, department_id) VALUES ('${title}', ${salary}, ${departmentId});`
+                            db.query(sql, (err, newRole) => {
+                                if (err) {
+                                    throw err;
+                                } else {
+                                    db.query('SELECT * FROM role', (err, newRoleTable) => {
+                                        if (err) {
+                                            throw err;
+                                        } else {
+                                            console.table('Role', newRoleTable);
+                                        }
+                                    })
+                                }
+                            })
+                        })
+                })
+            }
+            if(answer.init == 'Update Employee Role'){
+                const sql = 'SELECT first_name, last_name FROM employee;'
+                const sql2 = `SELECT CONCAT(first_name, ' ', last_name) AS "full_name"
+                FROM employee;`
+                let fullName = []
+                db.query(sql, (err, result)=>{
+                    if(err){
+                        throw err;
+                    } else {
+                        db.query(sql2, (err, fullNameObj) => {
+                            if(err){
+                                throw err;
+                            } else{
+                                const updateEmployeeQs =[
+                                    {
+                                        type: 'list',
+                                        name: 'empSelection',
+                                        message: "Which employee is changing roles?",
+                                        choices: fullNameObj.map((obj) =>{
+                                            return obj.fullName
+                                        })
+
+                                    },
+                                    {
+                                        type: 'input',
+                                        name: 'newRole',
+                                        message: 'What is the new role?',
+                                        
+                                    }
+                                ]
+                                console.log(obj.fullName)
+                            }
+                        })
+                        //console.log(result);
+                    }
+                })
+            }
 
 
         })
