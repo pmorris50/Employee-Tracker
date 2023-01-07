@@ -21,8 +21,28 @@ const updateEmployeeRoleQs = [{
 
 }
 ]
+const addNewEmployeeQs = [
+    {
+        type: 'input',
+        name: 'firstName',
+        message: "What is the employee's first name?"
 
-module.exports = { startQuestion: startQuestion, updateEmployeeRoleQs: updateEmployeeRoleQs,
-addDepartment: addDepartment
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: "What is the employee's last name?"
+    },
+//     {
+//         type: 'list',
+//         name: 'roleID',
+//         message: "What is the employee's role ID"
+//         choices: //variables for what role_id's are avaliable per etable
+//     }
+ ]
+
+module.exports = {
+    startQuestion: startQuestion, updateEmployeeRoleQs: updateEmployeeRoleQs,
+    addDepartment: addDepartment
 }
 

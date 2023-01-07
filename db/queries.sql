@@ -20,4 +20,4 @@ SET role_id = new_role_id --will be determined by user -- what is first_name's n
 WHERE id = employee_id; --will be determined by user question - "Which Employee do you want to change roles?"
 
 --add department
-INSERT INTO department ()
+INSERT INTO department (name) VALUES ('Banana')
