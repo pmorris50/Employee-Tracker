@@ -103,14 +103,14 @@ function init() {
                     if (err) {
                         throw err;
                     } else {
-                        db.query('SELECT id FROM employee', (err, empObject)=>{
+                        db.query('SELECT id FROM employee', (err, empObject) => {
 
                             const addNewEmployeeQs = [
                                 {
                                     type: 'input',
                                     name: 'firstName',
                                     message: "What is the employee's first name?"
-    
+
                                 },
                                 {
                                     type: 'input',
@@ -121,7 +121,7 @@ function init() {
                                     type: 'list',
                                     name: 'roleID',
                                     message: "What is the employee's role ID",
-                                    choices: result.map((obj)=>{
+                                    choices: result.map((obj) => {
                                         return obj.id
                                     })
                                 },
@@ -129,48 +129,45 @@ function init() {
                                     type: 'list',
                                     name: 'managerId',
                                     message: 'What is the ID of this employee manager?',
-                                    choices:  empObject.map((obj) =>{
+                                    choices: empObject.map((obj) => {
                                         return obj.id
                                     })
                                 }
-    
+
                             ]
-    
+
                             inquirer.prompt(addNewEmployeeQs)
-                            .then((answer)  => {
-                                const firstName = answer.firstName;
-                                const lastName = answer.lastName;
-                                const roleID = answer.roleID;
-                                const managerId = answer.managerId
-                                const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                                .then((answer) => {
+                                    const firstName = answer.firstName;
+                                    const lastName = answer.lastName;
+                                    const roleID = answer.roleID;
+                                    const managerId = answer.managerId
+                                    const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
                                 VALUES ('${firstName}', '${lastName}', ${roleID}, ${managerId})`
-                                db.query(sql, (err, newEmp) => {
-                                    if(err){
-                                        throw err;
-                                    } else{
-                                        db.query('SELECT * FROM employee', (err, newTable) =>{
-                                            if(err){
-                                                throw err;
-                                            } else{
-                                                console.table('Employee', newTable);
-                                            }
-                                        })
-                                        // console.table('Employee', newEmp);
-                                    }
-                                })  
-                               // console.log(answer.firstName)
-                            })
+                                    db.query(sql, (err, newEmp) => {
+                                        if (err) {
+                                            throw err;
+                                        } else {
+                                            db.query('SELECT * FROM employee', (err, newTable) => {
+                                                if (err) {
+                                                    throw err;
+                                                } else {
+                                                    console.table('Employee', newTable);
+                                                } return init();
+                                            })
+
+                                        }
+                                    })
+
+                                })
 
                         })
-                
-                        //console.log(result)
-                        //roleIds = result
-                        //console.log(roleIds)
-                        
+
+
+
                     }
                 })
-               // console.log(roleIds)
-                //inquirer.prompt()
+
             }
 
         })
