@@ -182,7 +182,7 @@ function init() {
                             name: 'departmentId',
                             message: "what is the new role's department ID?",
                             choices: roleObj.map((obj) => {
-                               return obj.department_id
+                                return obj.department_id
                                 //console.log(roleObj)
                             })
                         }
@@ -216,118 +216,85 @@ function init() {
 
                 const sql = `SELECT CONCAT(first_name, ' ', last_name) AS "full_name"
                 FROM employee;`
+
                 let fullName = []
-                db.query(sql, (err, results) =>{
-                    if(err){
+                db.query(sql, (err, results) => {
+                    if (err) {
                         throw err
-                    }else{
+                    } else {
                         const whichEmp = [
                             {
                                 type: 'list',
                                 name: 'empName',
                                 message: 'Which Employee needs a new role?',
-                                choices: results.map((obj) =>{
+                                choices: results.map((obj) => {
                                     return obj.full_name
+                                    //  console.log(obj.full_name)
                                 })
                             }
                         ]
                         inquirer.prompt(whichEmp)
-                        .then((answer) => {
-                            const employee = answer.empName
-                            db.query('SELECT DISTINCT id FROM ROLE;', (err, roleIds) =>{
-                                console.log(roleIds);
-                                const updateWhichRole = [
-                                    {
-                                        type: 'list',
-                                        name: 'roles',
-                                        message: "Select the employee's new role",
-                                        choices: roleIds.map((obj) =>{
-                                            return obj.id
-                                        })
-                                    }
-                                ]
-                                inquirer.prompt(updateWhichRole)
-                                .then((answer) =>{
-                                    db.query('SELECT * FROM employee',(err, newEmployeeTable) => {
-                                        if(err){
-                                            throw err;
-                                        } else{
-                                            console.table('Employee', newEmployeeTable)
-                                            return init();
+                            .then((answer) => {
+                                const employee = answer.empName
+                                db.query('SELECT DISTINCT id FROM ROLE;', (err, roleIds) => {
+                                    // console.log(roleIds);
+                                    const updateWhichRole = [
+                                        {
+                                            type: 'list',
+                                            name: 'roles',
+                                            message: "Select the employee's new role",
+                                            choices: roleIds.map((obj) => {
+                                                return obj.id
+                                            })
                                         }
-                                    })
+                                    ]
+                                    inquirer.prompt(updateWhichRole)
+                                        .then((answer) => {
+                                            const newRole = answer.roles
+                                            db.query('SELECT * FROM employee', (err, newEmployeeTable) => {
+                                                if (err) {
+                                                    throw err;
+                                                } else {
+                                                    db.query(`UPDATE employee SET role_id = ${newRole}
+                                                    WHERE first_name LIKE '${employee}%`, (err, final)=>{
+                                                         //console.table('employee', final)
+                                                         db.query('SELECT * FROM employee', (err, final2)=>{
+                                                              console.table('employee', final2);
+                                                              return init();
+                                                          })
+                                                      // console.table('Employee', final);
+                                                       //return init();
+                                                    })
+                                                    //console.table('Employee', newEmployeeTable)
+                                                  //  return init();
+                                                }
+                                            })
+                                        })
                                 })
+                                // console.log(employee);
                             })
-                            console.log(employee);
-                        })
-                       // console.log(results);  
+                        // console.log(results);  
                     }
 
-                    
+
                 })
             }
-                // db.query(sql2, (err, result) => {
-                //     if (err) {
-                //         throw err;
-                //     } else {
-                //         const selectEmployee = [
-                //             {
-                //                 type: 'list',
-                //                 name: 'employee',
-                //                 message: 'Which employee needs an updated role?',
-                //                 choices: results.map((obj) => {
-                //                     return obj.full_name
-                //                 })
-                //             }
-                //         ]
-                //         console.log(result)
-                //        inquirer.prompt(selectEmployee)
-                //         // db.query(sql2, (err, fullNameObj) => {
-                //         //     if (err) {
-                //         //         throw err;
-                //         //     } else {
-                //                 //         const updateEmployeeQs = [
-                //                 //             {
-                //                 //                 type: 'list',
-                //                 //                 name: 'empSelection',
-                //                 //                 message: "Which employee is changing roles?",
-                //                 //                 choices: fullNameObj.map((obj) => {
-                //                 //                     return obj.fullName
-                //                 //                 })
 
-                //                 //             },
-                //                 //             {
-                //                 //                 type: 'input',
-                //                 //                 name: 'newRole',
-                //                 //                 message: 'What is the new role? Please enter '
+        })
+}
+init();
 
-                //                 //             }
-                //                 //         ]
-                //                 //        // console.log(obj.fullName)
-                //                 //     }
-                //                 // })
-                //                 //console.log(result);
-                //             }
+function viewDepartments() {
+    const sql1 = 'SELECT DISTINCT name FROM department;';
+    db.query(sql1, (err, results) => {
+        if (err) {
+            throw err;
+        } else {
+            console.table('Departments', results);
 
-                //         })
-                //     }
+        }
 
-
-                // })
-        })}            
-            init();
-
-            function viewDepartments() {
-                const sql1 = 'SELECT DISTINCT name FROM department;';
-                db.query(sql1, (err, results) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        console.table('Departments', results);
-
-                    }
-
-                    init();
-                });
-            };
+        init();
+    });
+};
 

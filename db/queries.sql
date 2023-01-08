@@ -21,3 +21,8 @@ WHERE id = employee_id; --will be determined by user question - "Which Employee 
 
 --add department
 INSERT INTO department (name) VALUES ('Banana')
+
+
+UPDATE employee 
+SET id = ${answer.roles}
+WHERE full_name = ${employee}
